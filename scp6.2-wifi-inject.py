@@ -6,22 +6,20 @@ class WifiInject:
 
     @classmethod
     def send_system_command(cls) -> Union[str, List[str]]:
-        """
-            Send command to get profiles
-            and check working wlan0
-        """
+        """ Sending command to get SSID list """
+        
         try:
             sys_process = subprocess.check_output(
                 ["netsh", "wlan", "show", "profiles"]
             ).decode("UTF-8", errors="backslashreplace").split('\n')
         except subprocess.CalledProcessError:
-            return f"Служба автонастройки беспроводной сети (wlansvc) не запущена"
+            return f"Wireless AutoConfig Service (wlansvc) is not running"
 
         return sys_process
 
     @classmethod
     def parse_system_data(cls) -> List[str]:
-        """ Parse result and get all wifi-logins """
+        """ Parses the result and returns everything in an array """
 
         profiles = [
             data.split(":")[1][1:-1]
@@ -33,7 +31,7 @@ class WifiInject:
 
     @classmethod
     def show_result(cls) -> str:
-        """ Show result in console """
+        """ Prints the result to the console """
 
         for data in cls.parse_system_data():
             try:
